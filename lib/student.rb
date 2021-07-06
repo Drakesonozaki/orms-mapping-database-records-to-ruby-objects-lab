@@ -30,9 +30,13 @@ class Student
     LIMIT 1
     SQL
 
-    DB[:conn].execute(sql,name).map do |row|
-      self.new_from_db(row)
-    end.first
+    row = DB[:conn].execute(sql,name)
+    self.new_from_db(row[0])
+    #binding.pry
+
+    #DB[:conn].execute(sql,name).map do |row|
+      #self.new_from_db(row)
+    #end
   end
   
   def save
@@ -60,7 +64,6 @@ class Student
     sql = "DROP TABLE IF EXISTS students"
     DB[:conn].execute(sql)
   end
-end
 
   def self.students_below_12th_grade
     sql = <<-SQL
@@ -95,7 +98,7 @@ end
     LIMIT ?
     SQL
 
-    DB[:conn].execute(sql).map do|row|
+    DB[:conn].execute(sql, number).map do|row|
       self.new_from_db(row)
     end
   end
@@ -111,10 +114,11 @@ end
 
     DB[:conn].execute(sql).map do |row|
       self.new_from_db(row)
-    end
+      #Sbinding.pry
+    end[0]
   end
 
-  def self.all_students_in_grade_x(grade)
+  def self.all_students_in_grade_X(grade)
     sql = <<-SQL
     SELECT *
     FROM students
